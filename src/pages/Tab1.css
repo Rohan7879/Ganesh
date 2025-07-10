@@ -1,0 +1,34 @@
+ion-datetime-button::part(native) {
+  width: 100%;
+  display: block;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  box-sizing: border-box;
+  text-align: left;
+}
+ion-datetime-button {
+  margin-bottom: 1rem;
+}
+ion-datetime {
+  --background: rgb(245, 235, 247);
+  --background-rgb: 245, 235, 247;
+  --wheel-highlight-background: rgb(218, 216, 255);
+  --wheel-highlight-border-radius: 48px;
+  --wheel-fade-background-rgb: 245, 235, 247;
+}
+
+ion-datetime::part(wheel-item) {
+  color: rgb(255, 66, 97);
+}
+
+ion-datetime::part(wheel-item active) {
+  color: rgb(39, 82, 150);
+}
+ion-item::part(native) {
+  background: white;
+  border-radius: 8px;
+}
