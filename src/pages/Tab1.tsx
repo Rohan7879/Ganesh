@@ -8,7 +8,6 @@ import {
   IonInput,
   IonButton,
   IonLabel,
-  IonText,
   IonItem,
   IonDatetime,
   IonDatetimeButton,
@@ -16,19 +15,19 @@ import {
 } from "@ionic/react";
 
 const BillCutCalculator: React.FC = () => {
-  const [bill, setBill] = useState("");
-  const [freight, setFreight] = useState("");
-  const [received, setReceived] = useState("");
+  const [bill, setBill] = useState(""); // EMPTY INITIALLY
+  const [freight, setFreight] = useState(""); // DEFAULT TO 0
+  const [received, setReceived] = useState(""); // EMPTY INITIALLY
   const [billDate, setBillDate] = useState("");
   const [result, setResult] = useState("");
   const [calculated, setCalculated] = useState(false);
 
   const handleCalculate = () => {
-    const billNum = parseFloat(bill);
-    const freightNum = freight ? parseFloat(freight) : 0;
-    const receivedNum = parseFloat(received);
+    const billNum = parseFloat(bill || "0");
+    const freightNum = parseFloat(freight || "0");
+    const receivedNum = parseFloat(received || "0");
 
-    if (!bill || !received) {
+    if (!bill || !received || isNaN(billNum) || isNaN(receivedNum)) {
       setResult("❗ Please enter valid Bill and Received amounts.");
       return;
     }
@@ -39,12 +38,13 @@ const BillCutCalculator: React.FC = () => {
     }
 
     const total = billNum + freightNum;
+
     if (total === 0) {
       setResult("❗ Total (Bill + Freight) cannot be zero.");
       return;
     }
 
-    const cutAmount = total - (receivedNum + freightNum);
+    const cutAmount = billNum - receivedNum;
     const percentCut = (cutAmount / total) * 100;
 
     let daysDiff = "";
@@ -74,7 +74,7 @@ ${daysDiff}${cutDisplay}
 
   const handleRefresh = () => {
     setBill("");
-    setFreight("");
+    setFreight("0");
     setReceived("");
     setBillDate("");
     setResult("");
@@ -88,6 +88,7 @@ ${daysDiff}${cutDisplay}
           <IonTitle className="ion-text-center">💰 Bill Cut % Calculator</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-padding" style={{ background: "#f0f6ff", color: "#000" }}>
         <div
           style={{
@@ -104,7 +105,7 @@ ${daysDiff}${cutDisplay}
             type="number"
             value={bill}
             placeholder="Enter bill amount"
-            onIonChange={(e) => setBill(e.detail.value!)}
+            onIonInput={(e) => setBill((e.target as HTMLInputElement).value)}
             style={inputStyle}
           />
 
@@ -113,7 +114,7 @@ ${daysDiff}${cutDisplay}
             type="number"
             value={freight}
             placeholder="Enter freight (optional)"
-            onIonChange={(e) => setFreight(e.detail.value!)}
+            onIonInput={(e) => setFreight((e.target as HTMLInputElement).value)}
             style={inputStyle}
           />
 
@@ -122,26 +123,13 @@ ${daysDiff}${cutDisplay}
             type="number"
             value={received}
             placeholder="Enter amount received"
-            onIonChange={(e) => setReceived(e.detail.value!)}
+            onIonInput={(e) => setReceived((e.target as HTMLInputElement).value)}
             style={inputStyle}
           />
 
           <IonLabel style={{ fontWeight: "600", marginTop: "1rem", color: "#003366" }}>Bill Date</IonLabel>
 
-          <IonItem
-            lines="none"
-            style={{
-              "--background": "white",
-              "--color": "#000",
-              // padding: "0",
-              // marginTop: "6px",
-              // borderRadius: "8px",
-              // border: "1px solid #ccc",
-              // height: "56px",
-              // boxSizing: "border-box",
-              // width: "100%",
-            }}
-          >
+          <IonItem lines="none" style={{ "--background": "white", "--color": "#000" }}>
             <IonDatetimeButton datetime="bill-date" style={{ width: "100%" }} />
           </IonItem>
 
